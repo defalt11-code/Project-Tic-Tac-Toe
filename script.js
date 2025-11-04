@@ -28,6 +28,8 @@ const p1 = createPlayer.playerOne("john");
 const p2 = createPlayer.playerTwo("Josh");
 
 const gameController = function() {
+    const { getBoard, setMove } = board;
+
     const players = [p1, p2];
     let activePlayer = players[0];
     const switchActive = () => {
@@ -37,13 +39,13 @@ const gameController = function() {
     const getActivePlayer = () => activePlayer;
 
     const playRound = (r, c) => {
-        if(board.getBoard()[r][c] === "x" || board.getBoard()[r][c] === "o") {
+        if(getBoard()[r][c] === "x" || getBoard()[r][c] === "o") {
             alert("cell are already taken!");
             return;
         }
-        board.setMove(r, c, activePlayer.mark);
+        setMove(r, c, activePlayer.mark);
         switchActive();
-        return board.getBoard();
+        return getBoard();
     }
 
     const checkWinner = () => {
@@ -59,12 +61,12 @@ const gameController = function() {
         ]
 
         for(const patterns of winningPatterns) {
-            co
         }
     }
 
     return {playRound, getActivePlayer, checkWinner};
 }()
+
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(1, 2));
 console.log(gameController.getActivePlayer());
