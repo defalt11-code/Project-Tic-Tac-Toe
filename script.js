@@ -10,7 +10,64 @@ function gameBoard() {
         }
     }
 
-    return board
+    const getBoard = () => board;
+    const setMove = (r, c, mark) => board[r][c] = mark;
+
+    return {getBoard, setMove};
 }
 
-console.log(gameBoard())
+const board = gameBoard()
+
+const createPlayer = function() {
+  const playerOne = (name) => ({name: name, mark: "x"})
+  const playerTwo = (name) => ({name: name,  mark: "o"})
+  return {playerOne, playerTwo}
+}()
+
+const p1 = createPlayer.playerOne("john");
+const p2 = createPlayer.playerTwo("Josh");
+
+const gameController = function() {
+    const players = [p1, p2];
+    let activePlayer = players[0];
+    const switchActive = () => {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0];
+    };
+
+    const getActivePlayer = () => activePlayer;
+
+    const playRound = (r, c) => {
+        if(board.getBoard()[r][c] === "x" || board.getBoard()[r][c] === "o") {
+            alert("cell are already taken!");
+            return;
+        }
+        board.setMove(r, c, activePlayer.mark);
+        switchActive();
+        return board.getBoard();
+    }
+
+    const checkWinner = () => {
+        const winningPatterns = [ 
+            [[0,0],[0,1],[0,2]],
+            [[1,0],[1,1],[1,2]],
+            [[2,0],[2,1],[2,2]],
+            [[0,0],[1,0],[2,0]],
+            [[0,1],[1,1],[2,1]],
+            [[0,2],[1,2],[2,2]],
+            [[0,0],[1,1],[2,2]],
+            [[0,2],[1,1],[2,0]],
+        ]
+
+        for(const patterns of winningPatterns) {
+            co
+        }
+    }
+
+    return {playRound, getActivePlayer, checkWinner};
+}()
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(1, 2));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(1, 1));
+
+console.log(gameController.checkWinner())
