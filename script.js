@@ -6,7 +6,7 @@ function gameBoard() {
     for(let i = 0; i < row; i++) {
         board[i] = []; 
         for(let j = 0; j < column; j++) {
-            for
+            board[i][j] = "";
         }
     }
 
