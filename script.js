@@ -3,7 +3,7 @@
 		better.  */
 
 
-//Seperate the logic of the creation of board and return only what's needed
+// Seperate the logic of the creation of board and return only what's needed
 function gameBoard() {
 	const board = [];
 	const row = 3;
@@ -29,7 +29,7 @@ function gameBoard() {
 
 const board = gameBoard();
 
-//Handles the creation of the player and automatically assign the mark 
+// Handles the creation of the player and automatically assign the mark 
 const createPlayer = function () {
 	const playerOne = (name) => ({ name: name, mark: "x" })
 	const playerTwo = (name) => ({ name: name, mark: "o" })
@@ -45,20 +45,20 @@ const gameController = function () {
 	let players = [];
 	let activePlayer;
 
-	//Set the players position once game starts
+	// Set the players position once game starts
 	const setPlayers = (p1, p2) => {
 		players = [p1, p2];
 		activePlayer = players[0];
 	}
 
-	//Handles of switching of players everytime we play a round
+	// Handles of switching of players everytime we play a round
 	const switchActive = () => {
 		activePlayer = activePlayer === players[0] ? players[1] : players[0];
 	};
 
 	const getActivePlayer = () => activePlayer;
 
-	//Check the board Status if all cells ar taken then reset the board 
+	// Check the board Status if all cells ar taken then reset the board 
 	const checkBoard = () => {
 		const boardStatus = getBoard().reduce((cells, rows) => cells.concat(rows), []);
 		if (boardStatus.every(cell => cell != "")) {
@@ -67,7 +67,7 @@ const gameController = function () {
 		}
 	}
 
-	//Handles each round this is where we call all helper function to check each round
+	// Handles each round this is where we call all helper function to check each round
 	const playRound = (r, c) => {
 		if (getBoard()[r][c] === "x" || getBoard()[r][c] === "o") {
 			alert("cell are already taken!");
@@ -75,13 +75,13 @@ const gameController = function () {
 		} else {
 			setMove(r, c, activePlayer.mark);
 		}
-		checkWinner();
+		if (checkWinner()) return;
 		checkBoard();
 		switchActive();
 		return getBoard();
 	}
 
-	//Check if theres already winner using the pattern that we map if its mactches the pattern
+	// Check if theres already winner using the pattern that we map if its mactches the pattern
 	const checkWinner = () => {
 		const winningPatterns = [
 			[[0, 0], [0, 1], [0, 2]],
@@ -94,7 +94,7 @@ const gameController = function () {
 			[[0, 2], [1, 1], [2, 0]],
 		];
 
-		//map the patterns and store it the marks variable and check if marks has all the same mark
+		// Map the patterns and store it the marks variable and check if marks has all the same mark
 		for (const patterns of winningPatterns) {
 			const marks = patterns.map((position) => {
 				const r = position[0];
@@ -103,6 +103,9 @@ const gameController = function () {
 			});
 			if (marks.every(mark => mark != "" && mark === marks[0])) {
 				console.log(`${activePlayer.name} wins!`);
+				return true;
+			} else {
+				return false;
 			}
 		}
 	}
