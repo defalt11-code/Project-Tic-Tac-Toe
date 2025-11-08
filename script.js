@@ -33,7 +33,7 @@ const p1 = createPlayer.playerOne("john");
 const p2 = createPlayer.playerTwo("Josh");
 
 const gameController = function () {
-	const { getBoard, setMove } = board;
+	const { getBoard, setMove, resetBoard } = board;
 	let players = [];
 	let activePlayer;
 
@@ -49,7 +49,11 @@ const gameController = function () {
 	const getActivePlayer = () => activePlayer;
 
 	const checkBoard = () => {
-		const boardStatus = ()
+		const boardStatus = getBoard().reduce((cells, rows) => cells.concat(rows), []);
+		if (boardStatus.every(cell => cell != "")) {
+			resetBoard();
+			console.log("All cells now are taken!");
+		}
 	}
 
 	const playRound = (r, c) => {
@@ -60,6 +64,7 @@ const gameController = function () {
 			setMove(r, c, activePlayer.mark);
 		}
 		checkWinner();
+		checkBoard();
 		switchActive();
 		return getBoard();
 	}
@@ -93,7 +98,7 @@ const gameController = function () {
 
 gameController.setPlayers(p1, p2);
 
-console.log(gameController.getActivePlayer());
+/* console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(0, 0));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(1, 1));
@@ -102,5 +107,22 @@ console.log(gameController.playRound(2, 0));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(2, 1));
 console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(1, 0)); */
 console.log(gameController.playRound(1, 0));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(2, 0));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(0, 0));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(2, 1));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(2, 2));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(1, 1));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(1, 2));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(0, 1));
+console.log(gameController.getActivePlayer());
+console.log(gameController.playRound(0, 2));
 
