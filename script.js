@@ -3,17 +3,22 @@ function gameBoard() {
 	const row = 3;
 	const column = 3;
 
-	for (let i = 0; i < row; i++) {
-		board[i] = [];
-		for (let j = 0; j < column; j++) {
-			board[i][j] = "";
+	const initBoard = () => {
+		for (let i = 0; i < row; i++) {
+			board[i] = [];
+			for (let j = 0; j < column; j++) {
+				board[i][j] = "";
+			}
 		}
 	}
 
+	initBoard();
+
+	const resetBoard = () => initBoard();
 	const getBoard = () => board;
 	const setMove = (r, c, mark) => board[r][c] = mark;
 
-	return { getBoard, setMove };
+	return { getBoard, setMove, resetBoard };
 }
 
 const board = gameBoard();
@@ -42,6 +47,10 @@ const gameController = function () {
 	};
 
 	const getActivePlayer = () => activePlayer;
+
+	const checkBoard = () => {
+		const boardStatus = ()
+	}
 
 	const playRound = (r, c) => {
 		if (getBoard()[r][c] === "x" || getBoard()[r][c] === "o") {
