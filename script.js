@@ -2,6 +2,16 @@
 		Passion dares to ask if they could be done 
 		better.  */
 
+const pOneInput = document.querySelector(".player__one");
+const pTwoInput = document.querySelector(".player__two");
+const btn = document.querySelector("button");
+
+btn.addEventListener("click", () => {
+	const p1 = createPlayer.playerOne(pOneInput.value);
+	const p2 = createPlayer.playerTwo(pTwoInput.value);
+	console.log(p1, p2)
+	gameController.setPlayers(p1, p2);
+});
 
 // Seperate the logic of the creation of board and return only what's needed
 function gameBoard() {
@@ -25,7 +35,7 @@ function gameBoard() {
 	const setMove = (r, c, mark) => board[r][c] = mark;
 
 	return { getBoard, setMove, resetBoard };
-}
+};
 
 const board = gameBoard();
 
@@ -34,10 +44,10 @@ const createPlayer = function () {
 	const playerOne = (name) => ({ name: name, mark: "x" })
 	const playerTwo = (name) => ({ name: name, mark: "o" })
 	return { playerOne, playerTwo }
-}()
+}();
 
-const p1 = createPlayer.playerOne("john");
-const p2 = createPlayer.playerTwo("Josh");
+/* const p1 = createPlayer.playerOne("john");
+const p2 = createPlayer.playerTwo("Josh"); */
 
 // This control the whole flow of the game
 const gameController = function () {
@@ -49,7 +59,7 @@ const gameController = function () {
 	const setPlayers = (p1, p2) => {
 		players = [p1, p2];
 		activePlayer = players[0];
-	}
+	};
 
 	// Handles of switching of players everytime we play a round
 	const switchActive = () => {
@@ -65,7 +75,7 @@ const gameController = function () {
 			resetBoard();
 			console.log("All cells now are taken!");
 		}
-	}
+	};
 
 	// Handles each round this is where we call all helper function to check each round
 	const playRound = (r, c) => {
@@ -111,9 +121,9 @@ const gameController = function () {
 	}
 
 	return { setPlayers, playRound, getActivePlayer, };
-}()
+}();
 
-gameController.setPlayers(p1, p2);
+// gameController.setPlayers(p1, p2);
 
 /* console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(0, 0));
@@ -125,7 +135,8 @@ console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(2, 1));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(1, 0)); */
-console.log(gameController.playRound(1, 0));
+
+/* console.log(gameController.playRound(1, 0));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(2, 0));
 console.log(gameController.getActivePlayer());
@@ -141,5 +152,5 @@ console.log(gameController.playRound(1, 2));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(0, 1));
 console.log(gameController.getActivePlayer());
-console.log(gameController.playRound(0, 2));
+console.log(gameController.playRound(0, 2)); */
 
