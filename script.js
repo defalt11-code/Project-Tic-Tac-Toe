@@ -6,6 +6,16 @@ const pOneInput = document.querySelector(".player__one");
 const pTwoInput = document.querySelector(".player__two");
 const btn = document.querySelector("button");
 
+const cellsHTML = document.querySelectorAll(".cells");
+const arr = [...cellsHTML];
+console.log(arr);
+
+arr.forEach((cell) => {
+	cell.addEventListener("click", () => {
+		console.log(gameController.playRound(cell.dataset.row, cell.dataset.col, cell));
+	})
+});
+
 btn.addEventListener("click", () => {
 	const p1 = createPlayer.playerOne(pOneInput.value);
 	const p2 = createPlayer.playerTwo(pTwoInput.value);
@@ -78,18 +88,19 @@ const gameController = function () {
 	};
 
 	// Handles each round this is where we call all helper function to check each round
-	const playRound = (r, c) => {
+	const playRound = (r, c, cell) => {
 		if (getBoard()[r][c] === "x" || getBoard()[r][c] === "o") {
 			alert("cell are already taken!");
 			return;
 		} else {
+			displayController.renderMove(cell, activePlayer.mark)
 			setMove(r, c, activePlayer.mark);
 		}
 		if (checkWinner()) return;
 		checkBoard();
 		switchActive();
 		return getBoard();
-	}
+	};
 
 	// Check if theres already winner using the pattern that we map if its mactches the pattern
 	const checkWinner = () => {
@@ -112,16 +123,33 @@ const gameController = function () {
 				return getBoard()[r][c];
 			});
 			if (marks.every(mark => mark != "" && mark === marks[0])) {
-				console.log(`${activePlayer.name} wins!`);
+				alert(`${activePlayer.name} wins!`);
 				return true;
-			} else {
-				return false;
 			}
+		}
+	};
+
+	return { setPlayers, getActivePlayer, playRound, };
+}();
+
+const displayController = function () {
+	function renderMoveUI(cell, mark) {
+		switch (mark) {
+			case "x":
+				cell.textContent = "x"
+				break;
+			case "o":
+				cell.textContent = "o"
 		}
 	}
 
-	return { setPlayers, playRound, getActivePlayer, };
+	function clearBoardUI() {
+
+	}
+	return { renderMoveUI }
 }();
+
+
 
 // gameController.setPlayers(p1, p2);
 
@@ -135,6 +163,7 @@ console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(2, 1));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(1, 0)); */
+
 
 /* console.log(gameController.playRound(1, 0));
 console.log(gameController.getActivePlayer());

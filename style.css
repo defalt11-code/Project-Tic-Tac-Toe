@@ -6,8 +6,32 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: Arial;
 }
 
 body {
   background-color: var(--body);
+}
+
+.board {
+  margin: 80px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 10px;
+}
+
+.cells {
+  font-size: 2rem;
+  background-color: white;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cells:hover {
+  cursor: pointer;
 }
