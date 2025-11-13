@@ -4,24 +4,12 @@
 
 const pOneInput = document.querySelector(".player__one");
 const pTwoInput = document.querySelector(".player__two");
-const btn = document.querySelector("button");
+const enterNameBtn = document.querySelector(".enter__btn");
+const playAgainBtn = document.querySelector(".play__again__btn");
 
-const cellsHTML = document.querySelectorAll(".cells");
-const arr = [...cellsHTML];
-console.log(arr);
+const cellsHTML = Array.from(document.querySelectorAll(".cells"))
+console.log(cellsHTML);
 
-arr.forEach((cell) => {
-	cell.addEventListener("click", () => {
-		console.log(gameController.playRound(cell.dataset.row, cell.dataset.col, cell));
-	})
-});
-
-btn.addEventListener("click", () => {
-	const p1 = createPlayer.playerOne(pOneInput.value);
-	const p2 = createPlayer.playerTwo(pTwoInput.value);
-	console.log(p1, p2)
-	gameController.setPlayers(p1, p2);
-});
 
 // Seperate the logic of the creation of board and return only what's needed
 function gameBoard() {
@@ -37,7 +25,6 @@ function gameBoard() {
 			}
 		}
 	}
-
 	initBoard();
 
 	const resetBoard = () => initBoard();
@@ -50,11 +37,11 @@ function gameBoard() {
 const board = gameBoard();
 
 // Handles the creation of the player and automatically assign the mark 
-const createPlayer = function () {
+const createPlayer = (function () {
 	const playerOne = (name) => ({ name: name, mark: "x" })
 	const playerTwo = (name) => ({ name: name, mark: "o" })
 	return { playerOne, playerTwo }
-}();
+})();
 
 /* const p1 = createPlayer.playerOne("john");
 const p2 = createPlayer.playerTwo("Josh"); */
@@ -82,8 +69,8 @@ const gameController = function () {
 	const checkBoard = () => {
 		const boardStatus = getBoard().reduce((cells, rows) => cells.concat(rows), []);
 		if (boardStatus.every(cell => cell != "")) {
-			resetBoard();
-			console.log("All cells now are taken!");
+			alert("All cells now are taken!");
+			return true;
 		}
 	};
 
@@ -93,11 +80,14 @@ const gameController = function () {
 			alert("cell are already taken!");
 			return;
 		} else {
-			displayController.renderMove(cell, activePlayer.mark)
+			displayController.renderMoveUI(cell, activePlayer.mark)
 			setMove(r, c, activePlayer.mark);
 		}
-		if (checkWinner()) return;
-		checkBoard();
+		if (checkWinner()) {
+			cellsHTML.forEach(c => c.removeEventListener("click", handleClick));
+			return true;
+		};
+		if (checkBoard()) return;
 		switchActive();
 		return getBoard();
 	};
@@ -129,10 +119,10 @@ const gameController = function () {
 		}
 	};
 
-	return { setPlayers, getActivePlayer, playRound, };
+	return { setPlayers, getActivePlayer, playRound, switchActive };
 }();
 
-const displayController = function () {
+const displayController = (function () {
 	function renderMoveUI(cell, mark) {
 		switch (mark) {
 			case "x":
@@ -144,12 +134,42 @@ const displayController = function () {
 	}
 
 	function clearBoardUI() {
-
+		cellsHTML.forEach(cells => cells.textContent = "");
 	}
-	return { renderMoveUI }
-}();
 
+	return { renderMoveUI, clearBoardUI }
+})();
 
+const eventController = (function () {
+	function handleClick(event) {
+		const target = event.target;
+		switch (target.className) {
+			case "cells":
+				const cells = target;
+				const row = target.dataset.row;
+				const col = target.dataset.col;
+				gameController.playRound(row, col, cells);
+				break;
+			case "play__again__btn":
+				board.resetBoard();
+				displayController.clearBoardUI();
+				gameController.switchActive();
+				cellsHTML.forEach((cell) => cell.addEventListener("click", handleClick));
+				break;
+			case "enter__btn":
+				const p1 = createPlayer.playerOne(pOneInput.value);
+				const p2 = createPlayer.playerTwo(pTwoInput.value);
+				console.log(p1, p2)
+				gameController.setPlayers(p1, p2);
+				break;
+		}
+	}
+	return { handleClick }
+})();
+
+enterNameBtn.addEventListener("click", eventController.handleClick);
+playAgainBtn.addEventListener("click", eventController.handleClick);
+cellsHTML.forEach(cell => cell.addEventListener("click", eventController.handleClick));
 
 // gameController.setPlayers(p1, p2);
 
