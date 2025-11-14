@@ -10,7 +10,6 @@ const playAgainBtn = document.querySelector(".play__again__btn");
 const cellsHTML = Array.from(document.querySelectorAll(".cells"))
 console.log(cellsHTML);
 
-
 // Seperate the logic of the creation of board and return only what's needed
 function gameBoard() {
 	const board = [];
