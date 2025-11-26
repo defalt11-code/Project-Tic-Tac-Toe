@@ -186,7 +186,6 @@ const eventController = (function () {
 			case "play__again__btn":
 				gameController.resetBoard();
 				displayController.clearBoardUI();
-				gameController.switchActive();
 				// afterOverlay.classList.toggle("active");
 				displayController.renderOverLayUI("after");
 				break;
