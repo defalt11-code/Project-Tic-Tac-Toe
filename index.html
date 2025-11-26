@@ -10,18 +10,27 @@
 
     <div class="start__overlay">
       <div class="start__container">
-        <div>
-          <h1>Tic tac toe</h1>
-          <div>
-            <input class="player__one" type="text">
-            <input class="player__two" type="text">
+        <div class="form__container">
+          <h1>Tic Tac Toe</h1>
+          <div class="inputs__container">
+
+            <div class="input__label__container">
+              <label for="player__one">Player One</label>
+              <input class="player__one" type="text">
+            </div>
+
+            <div class="input__label__container">
+              <label for="player__two">Player Two</label>
+              <input class="player__two" type="text">
+            </div>
+
           </div>
           <button class="enter__btn">Enter</button>
         </div>
       </div>
     </div>
 
-    <button class="play__again__btn">Play again</button>
+    <p class="player"></p>
 
     <div class="board">
       <div class="cells" data-row="0" data-col="0"></div>
@@ -33,6 +42,11 @@
       <div class="cells" data-row="2" data-col="0"></div>
       <div class="cells" data-row="2" data-col="1"></div>
       <div class="cells" data-row="2" data-col="2"></div>
+    </div>
+
+    <div class="after__overlay">
+      <p class="message"></p>
+      <button class="play__again__btn">Play again</button>
     </div>
 
     <script src="script.js"></script>

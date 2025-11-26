@@ -2,13 +2,7 @@
 		Passion dares to ask if they could be done 
 		better.  */
 
-const pOneInput = document.querySelector(".player__one");
-const pTwoInput = document.querySelector(".player__two");
-const enterNameBtn = document.querySelector(".enter__btn");
-const playAgainBtn = document.querySelector(".play__again__btn");
-
-const cellsHTML = Array.from(document.querySelectorAll(".cells"))
-console.log(cellsHTML);
+/* THIS IS MY FIRST TIME CREATING API */
 
 // Seperate the logic of the creation of board and return only what's needed
 function gameBoard() {
@@ -23,7 +17,7 @@ function gameBoard() {
 				board[i][j] = "";
 			}
 		}
-	}
+	};
 	initBoard();
 
 	const resetBoard = () => initBoard();
@@ -45,7 +39,7 @@ const createPlayer = (function () {
 /* const p1 = createPlayer.playerOne("john");
 const p2 = createPlayer.playerTwo("Josh"); */
 
-// This control the whole flow of the game
+// This control the whole flow of the game logic
 const gameController = function () {
 	const { getBoard, setMove, resetBoard } = board;
 	let players = [];
@@ -60,6 +54,7 @@ const gameController = function () {
 	// Handles of switching of players everytime we play a round
 	const switchActive = () => {
 		activePlayer = activePlayer === players[0] ? players[1] : players[0];
+		displayController.showPlayerUI(activePlayer.name);
 	};
 
 	const getActivePlayer = () => activePlayer;
@@ -68,7 +63,9 @@ const gameController = function () {
 	const checkBoard = () => {
 		const boardStatus = getBoard().reduce((cells, rows) => cells.concat(rows), []);
 		if (boardStatus.every(cell => cell != "")) {
-			alert("All cells now are taken!");
+			displayController.renderOverLayUI("after");
+			// afterOverlay.classList.toggle("active");
+			displayController.messageUI();
 			return true;
 		}
 	};
@@ -82,10 +79,7 @@ const gameController = function () {
 			displayController.renderMoveUI(cell, activePlayer.mark)
 			setMove(r, c, activePlayer.mark);
 		}
-		if (checkWinner()) {
-			cellsHTML.forEach(c => c.removeEventListener("click", handleClick));
-			return true;
-		};
+		if (checkWinner()) return;
 		if (checkBoard()) return;
 		switchActive();
 		return getBoard();
@@ -103,7 +97,6 @@ const gameController = function () {
 			[[0, 0], [1, 1], [2, 2]],
 			[[0, 2], [1, 1], [2, 0]],
 		];
-
 		// Map the patterns and store it the marks variable and check if marks has all the same mark
 		for (const patterns of winningPatterns) {
 			const marks = patterns.map((position) => {
@@ -112,34 +105,75 @@ const gameController = function () {
 				return getBoard()[r][c];
 			});
 			if (marks.every(mark => mark != "" && mark === marks[0])) {
-				alert(`${activePlayer.name} wins!`);
+				displayController.renderOverLayUI("after");
+				// afterOverlay.classList.toggle("active");
+				displayController.messageUI(activePlayer.name);
 				return true;
 			}
 		}
 	};
 
-	return { setPlayers, getActivePlayer, playRound, switchActive };
+	return { setPlayers, getActivePlayer, playRound, switchActive, resetBoard };
 }();
 
+//handles all display related 
 const displayController = (function () {
+	// DOM referrence
+	const showPlayer = document.querySelector(".player");
+	const message = document.querySelector(".message");
+	const cellsHTML = Array.from(document.querySelectorAll(".cells"));
+	const startOverlay = document.querySelector(".start__overlay");
+	const afterOverlay = document.querySelector(".after__overlay");
+	// DOM referrence
+
+	//This determine which mark image were gonna use
 	function renderMoveUI(cell, mark) {
-		switch (mark) {
-			case "x":
-				cell.textContent = "x"
-				break;
-			case "o":
-				cell.textContent = "o"
+		const img = document.createElement("img");
+		img.classList.add("marks");
+		setTimeout(() => {
+			img.classList.add("pop");
+		}, 1);
+		img.src = mark === "x" ? "marks/X.png" : "marks/O.png";
+		img.classList.ad
+		cell.replaceChildren(img);
+	};
+	//shows UI whose player turn
+	function showPlayerUI(currentPlayer) {
+		showPlayer.textContent = `${currentPlayer}'s turn`;
+	}
+	//clears the board in UI not in the game logic!
+	function clearBoardUI() {
+		cellsHTML.forEach(cells => cells.textContent = "");
+	};
+	// if there's a winner show's the winner! if there's not shows draw!
+	function messageUI(player) {
+		message.textContent = player === undefined ? "Draw!" : `${player} wins!`
+	}
+	//initiate which overlay are needed if start/after overlay
+	function renderOverLayUI(screen) {
+		if (screen === "start") {
+			startOverlay.classList.toggle("disable");
+		} else if (screen === "after") {
+			afterOverlay.classList.toggle("active")
 		}
 	}
 
-	function clearBoardUI() {
-		cellsHTML.forEach(cells => cells.textContent = "");
-	}
+	const getCell = () => cellsHTML;
 
-	return { renderMoveUI, clearBoardUI }
+	return { renderMoveUI, clearBoardUI, showPlayerUI, messageUI, getCell, renderOverLayUI };
 })();
 
+// handles all all event related 
 const eventController = (function () {
+	const cell = displayController.getCell();
+
+	// DOM referrence
+	const pOneInput = document.querySelector(".player__one");
+	const pTwoInput = document.querySelector(".player__two");
+	const enterNameBtn = document.querySelector(".enter__btn");
+	const playAgainBtn = document.querySelector(".play__again__btn");
+	// DOM referrence
+
 	function handleClick(event) {
 		const target = event.target;
 		switch (target.className) {
@@ -150,25 +184,28 @@ const eventController = (function () {
 				gameController.playRound(row, col, cells);
 				break;
 			case "play__again__btn":
-				board.resetBoard();
+				gameController.resetBoard();
 				displayController.clearBoardUI();
 				gameController.switchActive();
-				cellsHTML.forEach((cell) => cell.addEventListener("click", handleClick));
+				// afterOverlay.classList.toggle("active");
+				displayController.renderOverLayUI("after");
 				break;
 			case "enter__btn":
 				const p1 = createPlayer.playerOne(pOneInput.value);
 				const p2 = createPlayer.playerTwo(pTwoInput.value);
-				console.log(p1, p2)
+				// startOverlay.classList.toggle("disable");
+				displayController.renderOverLayUI("start");
+				displayController.showPlayerUI(p1.name);
 				gameController.setPlayers(p1, p2);
 				break;
 		}
 	}
-	return { handleClick }
+
+	enterNameBtn.addEventListener("click", handleClick);
+	playAgainBtn.addEventListener("click", handleClick);
+	cell.forEach(c => c.addEventListener("click", handleClick));
 })();
 
-enterNameBtn.addEventListener("click", eventController.handleClick);
-playAgainBtn.addEventListener("click", eventController.handleClick);
-cellsHTML.forEach(cell => cell.addEventListener("click", eventController.handleClick));
 
 // gameController.setPlayers(p1, p2);
 
@@ -182,7 +219,6 @@ console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(2, 1));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(1, 0)); */
-
 
 /* console.log(gameController.playRound(1, 0));
 console.log(gameController.getActivePlayer());
@@ -202,3 +238,4 @@ console.log(gameController.playRound(0, 1));
 console.log(gameController.getActivePlayer());
 console.log(gameController.playRound(0, 2)); */
 
+/* DEAR FUTURE SELF I HOPE YOU MAKE IT */
